@@ -60,7 +60,7 @@ module.exports = function (app) {
         });
         res.json(result);
       } catch (err) {
-        res.status(400).send({ error: err.message });
+        res.json({ error: err.message });
       }
     })
 
@@ -68,13 +68,11 @@ module.exports = function (app) {
       let project = req.params.project;
       let { _id, ...fields } = req.body;
       if (!_id) {
-        return res.status(400).json({ error: "missing _id" });
+        return res.json({ error: "missing _id" });
       }
       let fieldKeys = Object.keys(fields)
       if (!fieldKeys.length) {
-        return res
-          .status(400)
-          .json({ error: "no update field(s) sent", _id: _id });
+        return res.json({ error: "no update field(s) sent", _id: _id });
       }
 
       fieldKeys.forEach((key) => {
@@ -90,7 +88,7 @@ module.exports = function (app) {
       const findIssue = issues.find((issue) => issue._id === _id);
 
       if (!findIssue) {
-        return res.status(400).json({ error: "could not update", _id: _id });
+        return res.json({ error: "could not update", _id: _id });
       }
 
       Object.keys(fields).forEach((key) => {
@@ -107,13 +105,13 @@ module.exports = function (app) {
       let project = req.params.project;
       let { _id } = req.body;
       if (!_id) {
-        return res.status(400).json({ error: "missing _id" });
+        return res.json({ error: "missing _id" });
       }
 
       const index = issues.findIndex((issue) => issue._id === _id);
 
       if (index === -1) {
-        return res.status(400).json({ error: "could not delete", _id: _id });
+        return res.json({ error: "could not delete", _id: _id });
       }
 
       issues.splice(index, 1);
