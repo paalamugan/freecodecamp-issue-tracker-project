@@ -14,13 +14,13 @@ module.exports = function (app) {
         if (!keys.length) {
           return issue.project === project;
         }
-
-        return keys.every((key) => {
+        const isEvery =  keys.every((key) => {
           if (key === "open") {
-            return Boolean(open) === issue.open;
+            return issue.open.toString() === query[key].toString();
           }
           return query[key] === issue[key];
-        })
+        });
+        return isEvery;
       });
 
       res.json(
