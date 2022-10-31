@@ -9,7 +9,6 @@ module.exports = function (app) {
     .get(function (req, res) {
       let project = req.params.project;
       let query = req.query;
-      console.log("issues", issues)
       let filteredIssue = issues.filter((issue) => {
         let keys = Object.keys(query)
         if (!keys.length) {
