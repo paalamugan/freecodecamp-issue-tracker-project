@@ -83,22 +83,23 @@ module.exports = function (app) {
         }
       })
 
-      const index = issues.findIndex((issue) => issue._id === _id);
+      if ('open' in fields) {
+        fields.open = fields.open === 'open'; 
+      }
 
-      if (index === -1) {
+      const findIssue = issues.find((issue) => issue._id === _id);
+
+      if (!findIssue) {
         return res.status(400).json({ error: "could not update", _id: _id });
       }
 
-      if ('open' in fields) {
-        fields.open = Boolean(fields.open); 
-      }
-      console.log("fields", fields)
-      issues[index] = {
-        ...issues[index],
-        ...fields,
-        updated_on: new Date().toISOString(),
-      };
-      console.log("issues", issues)
+      Object.keys(fields).forEach((key) => {
+        if (key in findIssue) {
+          findIssue[key] = fields[key];
+        }
+      });
+
+      findIssue.updated_on = new Date().toISOString();
       res.json({ result: "successfully updated", _id: _id });
     })
 
@@ -117,6 +118,6 @@ module.exports = function (app) {
 
       issues.splice(index, 1);
 
-      res.json({ result: "successfully updated", _id: _id });
+      res.json({ result: "successfully deleted", _id: _id });
     });
 };
